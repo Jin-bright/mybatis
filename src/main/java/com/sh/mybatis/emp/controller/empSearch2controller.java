@@ -1,6 +1,9 @@
 package com.sh.mybatis.emp.controller;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +33,12 @@ public class empSearch2controller extends AbstractController {
 		String gender = request.getParameter("gender");
 		Integer salary = null;
 		
+		String hireDate = request.getParameter("hire_date");
+		
+		
+		String hiredateCompare = request.getParameter("hiredateCompare");
+
+		
 		try {
 			salary = Integer.parseInt( request.getParameter("salary"));						
 		} catch ( NumberFormatException e) {
@@ -45,6 +54,8 @@ public class empSearch2controller extends AbstractController {
 		param.put("gender", gender);
 		param.put("salary", salary);
 		param.put("salaryCompare", salaryCompare);
+		param.put("hireDate", hireDate);
+		param.put("hiredateCompare", hiredateCompare);
 		
 		System.out.println("맵확인 param : " +  param  );
 		

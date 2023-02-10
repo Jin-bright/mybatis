@@ -75,6 +75,20 @@
 	      	</choose>
 	      </if>
 	      
+	      <if test="hireDate != null and hiredateCompare != null" >
+	      and
+	      <choose>
+	      		<when test="hiredateCompare eq 'ge'">
+	      		hire_date <![CDATA[ >= ]]>  to_date( #{hireDate} )
+	      		</when>
+	      		
+	      		<when test="hiredateCompare eq 'le'">
+	      		hire_date  <![CDATA[ <= ]]>  to_date( #{hireDate} )
+	      		</when>
+	      	</choose>
+	      
+	      </if>
+	      
 	</select>
 
 <!-- ** resultmap쓸때 쓸쑤있는거 -->
