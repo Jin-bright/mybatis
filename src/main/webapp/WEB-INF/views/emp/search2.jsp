@@ -74,10 +74,12 @@ div#search-container{
 	        <tr>
 	            <th>입사일</th>
 	            <td>
-	                <input type="date" name="hire_date" value=""/>    
-	                <input type="radio" name="hiredateCompare" id="hiredateCompare1" value='le'/>
+	                <input type="date" name="hire_date" value="${param.hire_date}"/>
+	                <input type="radio" name="hiredateCompare" id="hiredateCompare1" value='le'
+	                		${param.hiredateCompare eq 'le' ? 'checked' : ''} />
 	                <label for="hiredateCompare1">이전</label>
-	                <input type="radio" name="hiredateCompare" id="hiredateCompare2" value='ge'/>
+	                <input type="radio" name="hiredateCompare" id="hiredateCompare2" value='ge'
+	                  		${param.hiredateCompare eq 'ge' ? 'checked' : ''} />
 	                <label for="hiredateCompare2">이후</label>
 	            </td>
 	        </tr>

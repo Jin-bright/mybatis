@@ -34,8 +34,6 @@ public class empSearch2controller extends AbstractController {
 		Integer salary = null;
 		
 		String hireDate = request.getParameter("hire_date");
-		
-		
 		String hiredateCompare = request.getParameter("hiredateCompare");
 
 		
