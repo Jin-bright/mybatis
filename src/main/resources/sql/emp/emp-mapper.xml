@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="emp">
+
+<!--
+	<select  id="selectempMapList" resultType="map">
+		select * from emp 
+		where quit_yn = 'N'
+		order by emp_id
+	</select>
+
+** ${searchType} : 식별자 . 컬럼명 아님 테이블명만 동적으로 작성해야되는 경우 가능한거임 
+** 원래 쓸때는 #{} 이렇게 쓰는거맞음 
+
+ 
+	<select id="search1" resultType="map"  >
+ 		select * from emp 
+		where quit_yn = 'N' and ${searchType} like '%' || #{searchKeyword} ||'%'
+		order by emp_id	 	
+	</select>
+ -->	
+	
+<!--** 쌤방식 -->
+	<select id="selectempMapList" resultMap="empMap">
+		select
+			*
+		from
+			emp
+		where
+			quit_yn = 'N'
+		order by
+			emp_id
+	</select>
+	<select id="search1" resultMap="empMap">
+		select 
+			*
+		from
+			emp
+		where
+			quit_yn = 'N'
+			and
+			${searchType} like '%' || #{searchKeyword} || '%'
+		order by 
+			emp_id
+	</select>
+
+<!-- 마이바티스 if문임  -->
+	<select  id="search2" resultMap="empMap" >
+	select * 
+	from ( select e.*, decode(substr(emp_no,8,1), '1', '남', '3', '남', '여') gender 
+               from emp e )
+	where quit_yn = 'N'   <!-- ★★ where 절 젤처음에 항상있어야되는 컬럼이 있어야 작동하는 쿼리임  -->
+	<!--  1 = 1  ★★ 만약 없으면 이렇게 항상 참인 쿼리 하나를 넣고 사용하기 -->
+		 <if test="searchType != null and searchType !='' and searchKeyword!=null and searchKeyword!=''">
+		  and ${searchType} like '%' || #{searchKeyword} || '%'  
+		  </if>
+		  
+		  <if test="gender != null and gender !=''">
+	      and gender = #{gender}
+	      </if>
+	      
+	      <if test="salary != null and salaryCompare != null" >
+	      and 
+	      	<choose>
+<!-- 	      	<= >= 이런 예약어는 <![CDATA[ >= ]]>  이렇게 cdata에 해야됨 -->
+	      		<when test="salaryCompare eq 'ge'">
+	      		salary <![CDATA[ >= ]]>  #{salary}
+	      		</when>
+	      		
+	      		<when test="salaryCompare eq 'le'">
+	      		salary  <![CDATA[ <= ]]>  #{salary}
+	      		</when>
+	      	</choose>
+	      </if>
+	      
+	</select>
+
+<!-- ** resultmap쓸때 쓸쑤있는거 -->
+	<resultMap type="map" id="empMap">
+		<id column="emp_id" property="empId"/>
+		<result column="emp_name" property="empName"/>
+		<result column="emp_no" property="empNo"/>
+		<result column="gender" property="gender"/>
+		<result column="email" property="email"/>
+		<result column="phone" property="phone"/>
+		<result column="dept_code" property="deptCode"/>
+		<result column="job_code" property="jobCode"/>
+		<result column="sal_level" property="salLevel"/>
+		<result column="salary" property="salary"/>
+		<result column="bonus" property="bonus"/>
+		<result column="manager_id" property="managerId"/>
+		<result column="hire_date" property="hireDate"/>
+		<result column="quit_date" property="quitDate"/>
+		<result column="quit_yn" property="quitYn"/>
+	</resultMap>
+
+</mapper>

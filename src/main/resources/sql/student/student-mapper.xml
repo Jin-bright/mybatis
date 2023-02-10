@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="student">
+<!-- mapper의타입은항상풀네임으로 적어야한다 ctrl+hover햇을때 링크걸려야됨 // 단, 별칭을 사용해도된디 
+쿼리 값 대입은 #{property이름}표현식을사용한다-->
+	<insert id="insertStudent" parameterType="com.sh.mybatis.student.model.dto.Student">
+	insert into student(no, name, tel)
+	values( seq_student_no.nextval, #{name}, #{tel} )
+	</insert>
+	
+<!-- select 태그사용시 resulttype, resultmap 속성을 반드시 작성해야한다 _int가기본형int  -->	
+	<select  id="getTotalCount" resultType="_int" >
+	select count(*) from student
+	where deleted_at is null
+	</select>
+	
+<!-- 1명 조회할거야 selectOneStudent 
+  원래 : resultType="com.sh.mybatis.student.model.dto.Student"  -->
+   <!--resultType="student"-->	
+	<select  id="selectOneStudent" resultMap="studentDtoMap">
+	select * from student
+	where no = ${no} and deleted_at is null
+	</select>
+
+	<resultMap type="student" id="studentDtoMap">
+		<!-- <id column="NO" property="no"  /> pk컬럼전용  // pro~ 자바객체
+		<result column="NAME" property="name" /> 
+		<result column="TEL" property="tel" />
+		<result column="CREATED_AT" property="createdAt"/>
+		<result column="UPDATED_AT" property="updatedAt"/>
+		<result column="DELETED_AT" property="deletedAt"/>
+ 	-->
+	</resultMap>
+	
+		
+	
+	<update id="updateStudent"  parameterType="com.sh.mybatis.student.model.dto.Student" >
+	update student
+	set name = #{name}, tel = #{tel}, updated_at = sysdate
+	where no = #{no}
+	</update>
+
+
+	
+	
+	<select  id="selectOneStudentMap" resultMap="studentMap" >
+	select * from student
+	where no = ${no} and deleted_at is null 
+	</select>
+
+<!-- 	resultmap태그 결과집합의 행별 자바객체 맵핑을 처리하는 태그 -->
+	<resultMap type="map" id="studentMap">
+		<id column="NO" property="no"  /> <!-- pk컬럼전용  // pro~ 자바객체 -->
+		<result column="NAME" property="name" /> 
+		<result column="TEL" property="tel" />
+		<result column="CREATED_AT" property="createdAt"/>
+		<result column="UPDATED_AT" property="updatedAt"/>
+		<result column="DELETED_AT" property="deletedAt"/>
+	</resultMap>
+	
+	
+	<update id="deleteStudent"  parameterType="com.sh.mybatis.student.model.dto.Student">
+		update student
+		set	deleted_at = sysdate
+		where no = #{no} and deleted_at is null
+	</update>
+
+<!-- <select  id="selectStudent" resultType="student">  
+	resulttype은 한 행에 해당 하는 타입이라서 student임( list 아님 )   -->
+	<select  id="selectStudent" resultMap="studentDtoMap">
+		select * from student
+		where deleted_at is null
+		order by created_at desc
+	</select>
+<!-- <select id="selectStudentMapList" resultType="map">  -->	
+	<select  id="selectStudentMapList" resultMap="studentMap">
+		select * from student
+		where deleted_at is null
+		order by created_at desc
+	</select>
+	
+
+	
+</mapper>
